@@ -30,7 +30,7 @@ class NeuralNetwork(object):
 
 
     def forward_pass_train(self, X):
-        hidden_inputs = np.dot(X[None, :], self.weights_input_to_hidden)
+        hidden_inputs = np.dot(X , self.weights_input_to_hidden)
         hidden_outputs = self.activation_function(hidden_inputs)
         final_inputs = np.dot(hidden_outputs, self.weights_hidden_to_output)
         final_outputs = final_inputs
@@ -41,8 +41,8 @@ class NeuralNetwork(object):
         output_error_term = error
         hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T)
         hidden_error_term =  hidden_error * (hidden_outputs * (1 - hidden_outputs))
-        delta_weights_i_h += np.dot(X[:, None], hidden_error_term)
-        delta_weights_h_o += np.dot(hidden_outputs.T, output_error_term)
+        delta_weights_i_h += X[:, None] * hidden_error_term
+        delta_weights_h_o += hidden_outputs[:, None] * output_error_term
         return delta_weights_i_h, delta_weights_h_o
     
     def run(self, features):
