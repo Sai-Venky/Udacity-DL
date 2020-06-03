@@ -13,8 +13,8 @@ class NeuralNetwork(object):
             return (1/ (1 + (np.exp(-x))))
         self.activation_function = sigmoid
     def update_weights(self, delta_weights_i_h, delta_weights_h_o, n_records):
-        self.weights_hidden_to_output += self.lr * (delta_weights_h_o/n_records) 
-        self.weights_input_to_hidden += self.lr * (delta_weights_i_h/n_records)
+        self.weights_hidden_to_output = self.weights_hidden_to_output + self.lr * (delta_weights_h_o/n_records) 
+        self.weights_input_to_hidden = self.weights_input_to_hidden + self.lr * (delta_weights_i_h/n_records)
                 
 
     def train(self, features, targets):
@@ -41,8 +41,8 @@ class NeuralNetwork(object):
         output_error_term = error
         hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T)
         hidden_error_term =  hidden_error * (hidden_outputs * (1 - hidden_outputs))
-        delta_weights_i_h += X[:, None] * hidden_error_term
-        delta_weights_h_o += hidden_outputs[:, None] * output_error_term
+        delta_weights_i_h += hidden_error_term * X[:, None]
+        delta_weights_h_o = delta_weights_h_o + (output_error_term * hidden_outputs[:,None])
         return delta_weights_i_h, delta_weights_h_o
     
     def run(self, features):
